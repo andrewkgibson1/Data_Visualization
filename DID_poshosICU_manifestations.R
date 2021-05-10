@@ -1,0 +1,168 @@
+
+setwd("R:\\Andrew\\R")
+
+# this is the same as 
+pacman::p_load(data.table, dplyr, tidyr, readxl, stringr, ggplot2, patchwork, Cairo)
+
+dropEndingZero <- function(x){
+  str_replace(x, '(\\.)0|(\\.)00', '')
+}
+
+base_size_init = 15
+expand_size = c(0.15, 0.15)
+
+a = read_excel("R:\\Covid\\Long COVID\\Figures\\DID\\Archive\\DID_manifestation.xlsx")
+
+# factor_level = a$Manifestation
+# a$Manifestation <- factor(a$Manifestation, levels = a$Manifestation)
+# 
+# bold.organ <- c("Cardiovascular", "Coagulation", "Dermatologic", "Endocrine", "Gastrointestinal", "General",
+#                         "Kidney", "Mental health", "Musculoskeletal", "Neurologic", "Pulmonary")
+# 
+# bold.labels <- ifelse(levels(a$Manifestation) %in% bold.organ, yes = "bold", no = "plain")
+# width1 <- ifelse(levels(a$Manifestation) %in% bold.organ, yes = 0.8, no = 0.4)
+# 
+# #fill_color = '#ae017e'
+# fill_color = c('#998ec3',rep("#f1a340",7),
+#                '#998ec3',"#f1a340",
+#                '#998ec3',rep("#f1a340",2),
+#                '#998ec3',rep("#f1a340",3),
+#                '#998ec3',rep("#f1a340",3),
+#                '#998ec3',"#f1a340",
+#                '#998ec3',rep("#f1a340",2),
+#                '#998ec3',rep("#f1a340",5),
+#                '#998ec3',rep("#f1a340",2),
+#                '#998ec3',rep("#f1a340",4),
+#                '#998ec3',rep("#f1a340",3))
+
+p1 = ggplot(data=a, aes(x = Age, y = Manifestation, fill=factor(cohort, levels=c("ICU", "Hospitalized", "Positive")))) +
+  geom_bar(position="dodge", stat = 'identity') +
+  geom_vline(xintercept=0) +
+  labs(x ="\U2190 Age \U2264 60  |  Age > 70 \U2192", y=NULL, subtitle="Manifestation") +
+  scale_x_continuous(expand = c(0, 0),
+                     #trans='log10',
+                     limits = c(-100, 100),
+                     breaks = c(-75,-25,0,25,75),
+                     labels = dropEndingZero) +
+  #facet_grid(Manifestation ~ ., space = 'free', scales = 'free', switch = 'y') +
+  scale_y_discrete(limits=rev, expand = c(0, 0)) +
+  scale_fill_manual(values = rev(c('#1b9e77', '#d95f02', '#7570b3'))) + 
+  theme_test(base_size = base_size_init) +
+  theme(legend.position = "none",
+        legend.title = element_text(),
+        #strip.placement = 'none',
+        #strip.text.x = element_blank(),
+        #strip.text.y = element_text(angle=0),
+        #strip.background = element_blank(),
+        #axis.ticks.y = element_blank(),
+        plot.title.position = "plot",
+        plot.subtitle = element_text(size = 10, face = "bold",family="sans"),
+        axis.title.x = element_text(size=9,color='black',family="sans"),
+        axis.text.x = element_text(size=9,color='black',family="sans"),
+        axis.text.y = element_text(size=9,color='black',family="sans"),
+        plot.margin=margin(0,0.2,0,0,unit="cm")
+        ) 
+
+
+p2 = ggplot(data=a, aes(x = Race, y = Manifestation, fill=factor(cohort, levels=c("ICU", "Hospitalized", "Positive")))) +
+  geom_bar(position="dodge", stat = 'identity') +
+  geom_vline(xintercept=0) +
+  labs(x ="\U2190 White  |  Black \U2192 ", y=NULL) +
+  scale_x_continuous(expand = c(0, 0),
+                     #trans='log10',
+                     limits = c(-100, 100),
+                     breaks = c(-75,-25,0,25,75),
+                     labels = dropEndingZero) +
+  #facet_grid(Manifestation ~ ., space = 'free', scales = 'free', switch = 'y') +
+  scale_y_discrete(limits=rev, expand = c(0, 0)) +
+  scale_fill_manual(values = rev(c('#1b9e77', '#d95f02', '#7570b3'))) + 
+  theme_test(base_size = base_size_init) +
+  theme(legend.position = 'none',
+        #legend.title = element_text(),
+        #strip.placement = 'none',
+        #strip.background = element_blank(),
+        #strip.text.x = element_blank(),
+        #plot.title.position = "plot",
+        #plot.subtitle = element_text(size = 10, face = "bold",family="sans"),
+        #strip.text.y = element_text(angle=0),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_text(size=9,color='black',family="sans"),
+        axis.text.x = element_text(size=9,color='black',family="sans"),
+        axis.text.y = element_blank(),
+
+        plot.margin=margin(0,0.2,0,0,unit="cm")
+        ) 
+
+
+p3 = ggplot(data=a, aes(x = Sex, y = Manifestation, fill=factor(cohort, levels=c("ICU", "Hospitalized", "Positive")))) +
+  geom_bar(position="dodge", stat = 'identity') +
+  geom_vline(xintercept=0) +
+  labs(x ="\U2190 Female  |  Male \U2192    ", y=NULL) +
+  scale_x_continuous(expand = c(0, 0),
+                     #trans='log10',
+                     limits = c(-100, 100),
+                     breaks = c(-75,-25,0,25,75),
+                     labels = dropEndingZero) +
+  #facet_grid(Manifestation ~ ., space = 'free', scales = 'free', switch = 'y') +
+  scale_y_discrete(limits=rev, expand = c(0, 0)) +
+  scale_fill_manual(values = rev(c('#1b9e77', '#d95f02', '#7570b3'))) + 
+  theme_test(base_size = base_size_init) +
+  theme(legend.position = 'none',
+        #legend.title = element_text(),
+        #strip.placement = 'none',
+        #strip.background = element_blank(),
+        #strip.text.x = element_blank(),
+        #plot.title.position = "plot",
+        #plot.subtitle = element_text(size = 10, face = "bold",family="sans"),
+        #strip.text.y = element_text(angle=0),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_text(size=9,color='black',family="sans"),
+        axis.text.x = element_text(size=9,color='black',family="sans"),
+        axis.text.y = element_blank(),
+        
+        plot.margin=margin(0,0.2,0,0,unit="cm")
+  ) 
+
+p4 = ggplot(data=a, aes(x = Comorbidity, y = Manifestation, fill=factor(cohort, levels=c("ICU", "Hospitalized", "Positive")))) +
+  geom_bar(position="dodge", stat = 'identity') +
+  geom_vline(xintercept=0) +
+  labs(x =" \U2190 Low comorbidity  |  High comorbidity \U2192", y=NULL) +
+  scale_x_continuous(expand = c(0, 0),
+                     #trans='log10',
+                     limits = c(-100, 100),
+                     breaks = c(-75,-25,0,25,75),
+                     labels = dropEndingZero) +
+  #facet_grid(Manifestation ~ ., space = 'free', scales = 'free', switch = 'y') +
+  scale_y_discrete(limits=rev, expand = c(0, 0)) +
+  scale_fill_manual(values = rev(c('#1b9e77', '#d95f02', '#7570b3'))) + 
+  theme_test(base_size = base_size_init) +
+  theme(legend.position = c(0.22,.953),
+        legend.key.size=unit(0.4,"cm"),
+        legend.text=element_text(size=9),
+        legend.title=element_text(size=9,face="bold"),
+        #legend.title = element_text(),
+        #strip.placement = 'none',
+        #strip.background = element_blank(),
+        #strip.text.x = element_blank(),
+        #plot.title.position = "plot",
+        #plot.subtitle = element_text(size = 10, face = "bold",family="sans"),
+        #strip.text.y = element_text(angle=0),
+        axis.ticks.y = element_blank(),
+        axis.title.x = element_text(size=9,color='black',family="sans"),
+        axis.text.x = element_text(size=9,color='black',family="sans"),
+        axis.text.y = element_blank(),
+        
+        plot.margin=margin(0,0.2,0,0,unit="cm")
+  ) +
+  guides(fill=guide_legend(title="Legend",reverse=TRUE))
+  
+
+layout <- "
+ABCD
+"
+
+p1 + p2 + p3 + p4 + plot_layout(design=layout)
+
+pall <- p1 + p2 + p3 + p4 + plot_layout(design=layout)
+#ggsave("R:\\Andrew\\R\\test.jpg", pall, units = 'in', width = 11, height = 8.5)
+ggsave("R:\\Covid\\Long COVID\\Figures\\DID\\poshosICU_manifestations.pdf", pall, device=cairo_pdf, units = 'in', width = 11, height = 8.5)
